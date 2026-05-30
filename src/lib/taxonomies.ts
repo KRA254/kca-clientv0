@@ -1,0 +1,31 @@
+export const caseCategories = [
+  "Allegations",
+  "Investigations",
+  "Executive",
+  "County Government",
+  "Parliament",
+  "Court Status",
+  "Procurement",
+  "Health",
+  "Infrastructure",
+  "Energy",
+  "Land",
+  "Security",
+  "Historical",
+];
+
+export const projectSectors = [
+  "Infrastructure",
+  "Health",
+  "Education",
+  "Water",
+  "Energy",
+  "Roads",
+  "Housing",
+  "Agriculture",
+  "Transport",
+  "Security",
+  "County Services",
+  "ICT",
+  "Other Public Works",
+];

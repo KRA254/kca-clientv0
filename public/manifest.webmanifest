@@ -1,0 +1,40 @@
+{
+  "name": "Kenya Corruption Archives",
+  "short_name": "KCA",
+  "description": "Public corruption cases, profiles, projects, sources, and accountability records in Kenya.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#25211d",
+  "theme_color": "#7b241c",
+  "categories": ["news", "government", "education", "publications"],
+  "icons": [
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Corruption Cases",
+      "short_name": "Cases",
+      "url": "/corruption-cases",
+      "description": "Browse public corruption case records"
+    },
+    {
+      "name": "Projects",
+      "short_name": "Projects",
+      "url": "/projects",
+      "description": "Browse stalled and delayed public projects"
+    },
+    {
+      "name": "Submit Evidence",
+      "short_name": "Submit",
+      "url": "/submit",
+      "description": "Submit a corruption case or public project record for review"
+    }
+  ]
+}
