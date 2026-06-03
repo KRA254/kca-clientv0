@@ -14,6 +14,7 @@ import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProfilesRouteImport } from './routes/profiles'
 import { Route as PollsRouteImport } from './routes/polls'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as DonateRouteImport } from './routes/donate'
 import { Route as CorruptionCasesRouteImport } from './routes/corruption-cases'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -44,6 +45,11 @@ const PollsRoute = PollsRouteImport.update({
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DonateRoute = DonateRouteImport.update({
+  id: '/donate',
+  path: '/donate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CorruptionCasesRoute = CorruptionCasesRouteImport.update({
@@ -81,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/corruption-cases': typeof CorruptionCasesRoute
+  '/donate': typeof DonateRoute
   '/leaderboard': typeof LeaderboardRoute
   '/polls': typeof PollsRoute
   '/profiles': typeof ProfilesRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/corruption-cases': typeof CorruptionCasesRoute
+  '/donate': typeof DonateRoute
   '/leaderboard': typeof LeaderboardRoute
   '/polls': typeof PollsRoute
   '/profiles': typeof ProfilesRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/corruption-cases': typeof CorruptionCasesRoute
+  '/donate': typeof DonateRoute
   '/leaderboard': typeof LeaderboardRoute
   '/polls': typeof PollsRoute
   '/profiles': typeof ProfilesRoute
@@ -123,6 +132,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/corruption-cases'
+    | '/donate'
     | '/leaderboard'
     | '/polls'
     | '/profiles'
@@ -136,6 +146,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/corruption-cases'
+    | '/donate'
     | '/leaderboard'
     | '/polls'
     | '/profiles'
@@ -149,6 +160,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/corruption-cases'
+    | '/donate'
     | '/leaderboard'
     | '/polls'
     | '/profiles'
@@ -163,6 +175,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   CorruptionCasesRoute: typeof CorruptionCasesRoute
+  DonateRoute: typeof DonateRoute
   LeaderboardRoute: typeof LeaderboardRoute
   PollsRoute: typeof PollsRoute
   ProfilesRoute: typeof ProfilesRoute
@@ -208,6 +221,13 @@ declare module '@tanstack/react-router' {
       path: '/leaderboard'
       fullPath: '/leaderboard'
       preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/donate': {
+      id: '/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof DonateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/corruption-cases': {
@@ -259,6 +279,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   CorruptionCasesRoute: CorruptionCasesRoute,
+  DonateRoute: DonateRoute,
   LeaderboardRoute: LeaderboardRoute,
   PollsRoute: PollsRoute,
   ProfilesRoute: ProfilesRoute,
