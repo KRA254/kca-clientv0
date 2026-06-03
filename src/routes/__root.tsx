@@ -47,9 +47,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { title: "Kenya Corruption Archives" },
-      { name: "description", content: "Independent investigative journalism documenting public corruption in Kenya." },
+      { name: "description", content: "A public database for Kenya corruption cases, profiles, projects, and evidence trails." },
       { property: "og:title", content: "Kenya Corruption Archives" },
-      { property: "og:description", content: "Corruption cases, profiles, and accountability journalism." },
+      { property: "og:description", content: "Corruption cases, profiles, projects, and accountability records." },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Kenya Corruption Archives" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -59,9 +59,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
-          "@type": "NewsMediaOrganization",
+          "@type": "Dataset",
           name: "Kenya Corruption Archives",
-          description: "Investigative journalism documenting public corruption in Kenya.",
+          description: "A public database for Kenya corruption cases, profiles, projects, and evidence trails.",
         }),
       },
     ],

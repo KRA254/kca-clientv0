@@ -8,7 +8,6 @@
   "orientation": "portrait-primary",
   "background_color": "#25211d",
   "theme_color": "#7b241c",
-  "categories": ["news", "government", "education", "publications"],
   "icons": [
     {
       "src": "/android-icon-192x192.png",
@@ -21,26 +20,6 @@
       "sizes": "1254x1254",
       "type": "image/png",
       "purpose": "any maskable"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Corruption Cases",
-      "short_name": "Cases",
-      "url": "/corruption-cases",
-      "description": "Browse public corruption case records"
-    },
-    {
-      "name": "Projects",
-      "short_name": "Projects",
-      "url": "/projects",
-      "description": "Browse stalled and delayed public projects"
-    },
-    {
-      "name": "Submit Evidence",
-      "short_name": "Submit",
-      "url": "/submit",
-      "description": "Submit a corruption case or public project record for review"
     }
   ]
 }

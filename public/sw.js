@@ -1,5 +1,13 @@
 const CACHE_NAME = "kca-app-shell-v1";
-const APP_SHELL = ["/", "/offline.html", "/manifest.webmanifest", "/pwa-icon.svg", "/robots.txt"];
+const APP_SHELL = [
+  "/",
+  "/offline.html",
+  "/manifest.webmanifest",
+  "/logo.png",
+  "/android-icon-192x192.png",
+  "/favicon-32x32.png",
+  "/robots.txt",
+];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
