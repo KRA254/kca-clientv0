@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider } from "@tanstack/react-router";
 
 import { getRouter } from "./router";
-import { registerServiceWorker } from "./registerServiceWorker";
+import { unregisterServiceWorker } from "./registerServiceWorker";
 import "./styles.css";
 
 const router = getRouter();
@@ -19,4 +19,4 @@ createRoot(rootElement).render(
   </React.StrictMode>,
 );
 
-registerServiceWorker();
+unregisterServiceWorker();
