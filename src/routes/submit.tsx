@@ -60,7 +60,7 @@ function Submit() {
       ...caseForm,
       year: Number(caseForm.year),
       pseudonym: caseForm.pseudonym || undefined,
-      sources: [{ type: "Source", title: caseForm.sourceTitle, url: caseForm.sourceUrl }],
+      sources: buildOptionalSources(caseForm.sourceTitle, caseForm.sourceUrl),
       tags: [caseForm.category.toLowerCase()],
       images: [],
     }),
@@ -79,7 +79,7 @@ function Submit() {
       amountPaid: Number(projectForm.amountPaid),
       estimatedLoss: Number(projectForm.estimatedLoss),
       pseudonym: projectForm.pseudonym || undefined,
-      sources: [{ type: "Source", title: projectForm.sourceTitle, url: projectForm.sourceUrl }],
+      sources: buildOptionalSources(projectForm.sourceTitle, projectForm.sourceUrl),
     }),
     onSuccess: (res) => {
       setMessage(`${res.message} Keep this anonymous name for follow-up: ${res.pseudonym}`);
@@ -118,6 +118,11 @@ function Submit() {
       )}
     </main>
   );
+}
+
+function buildOptionalSources(title: string, url: string) {
+  if (!title.trim() && !url.trim()) return [];
+  return [{ type: "Source", title: title.trim(), url: url.trim() }];
 }
 
 function Field(props: { label: string; children: React.ReactNode }) {
@@ -188,7 +193,7 @@ function CaseForm({ value, setValue, pending, submit }: { value: typeof emptyCas
     <form className="grid md:grid-cols-2 gap-4" onSubmit={(e) => { e.preventDefault(); submit(); }}>
       <Field label="Anonymous name"><input className={input} value={value.pseudonym} onChange={(e) => update("pseudonym", e.target.value)} placeholder="Optional" /></Field>
       <Field label="Year"><input className={input} type="number" value={value.year} onChange={(e) => update("year", Number(e.target.value))} /></Field>
-      <Field label="Title"><input required className={input} value={value.title} onChange={(e) => update("title", e.target.value)} /></Field>
+      <Field label="Title"><input className={input} value={value.title} onChange={(e) => update("title", e.target.value)} placeholder="Optional, but helpful" /></Field>
       <Field label="Category">
         <SelectField
           required
@@ -198,10 +203,10 @@ function CaseForm({ value, setValue, pending, submit }: { value: typeof emptyCas
         />
       </Field>
       <div className="md:col-span-2"><Field label="Main image"><ImageInput value={value.featuredImage} onChange={(next) => update("featuredImage", next)} /></Field></div>
-      <div className="md:col-span-2"><Field label="Short summary"><textarea required className={textarea} value={value.excerpt} onChange={(e) => update("excerpt", e.target.value)} /></Field></div>
-      <div className="md:col-span-2"><Field label="Full details"><textarea required className={`${textarea} min-h-72`} value={value.content} onChange={(e) => update("content", e.target.value)} placeholder="Add names, dates, tender numbers, amounts, documents, and links." /></Field></div>
-      <Field label="Source title"><input required className={input} value={value.sourceTitle} onChange={(e) => update("sourceTitle", e.target.value)} /></Field>
-      <Field label="Source URL"><input required className={input} value={value.sourceUrl} onChange={(e) => update("sourceUrl", e.target.value)} /></Field>
+      <div className="md:col-span-2"><Field label="Short summary"><textarea className={textarea} value={value.excerpt} onChange={(e) => update("excerpt", e.target.value)} placeholder="Optional quick summary" /></Field></div>
+      <div className="md:col-span-2"><Field label="Full details"><textarea className={`${textarea} min-h-72`} value={value.content} onChange={(e) => update("content", e.target.value)} placeholder="Add anything you know: names, dates, tender numbers, amounts, documents, and links." /></Field></div>
+      <Field label="Source title"><input className={input} value={value.sourceTitle} onChange={(e) => update("sourceTitle", e.target.value)} placeholder="Optional" /></Field>
+      <Field label="Source URL"><input className={input} value={value.sourceUrl} onChange={(e) => update("sourceUrl", e.target.value)} placeholder="Optional link" /></Field>
       <button className="md:col-span-2 bg-ink text-primary-foreground px-4 py-3 font-mono text-xs uppercase" disabled={pending}>{pending ? "Sending..." : "Send for review"}</button>
     </form>
   );
@@ -217,7 +222,7 @@ function ProjectForm({ value, setValue, pending, submit }: { value: typeof empty
           {["under_review", "stalled", "delayed", "abandoned", "failed", "in_progress", "completed", "unknown"].map((item) => <option key={item} value={item}>{item.replaceAll("_", " ")}</option>)}
         </select>
       </Field>
-      <Field label="Project name"><input required className={input} value={value.name} onChange={(e) => update("name", e.target.value)} /></Field>
+      <Field label="Project name"><input className={input} value={value.name} onChange={(e) => update("name", e.target.value)} placeholder="Optional, but helpful" /></Field>
       <Field label="Sector">
         <SelectField
           required
@@ -233,10 +238,10 @@ function ProjectForm({ value, setValue, pending, submit }: { value: typeof empty
       <Field label="Amount paid"><input className={input} type="number" value={value.amountPaid} onChange={(e) => update("amountPaid", Number(e.target.value))} /></Field>
       <Field label="Estimated loss"><input className={input} type="number" value={value.estimatedLoss} onChange={(e) => update("estimatedLoss", Number(e.target.value))} /></Field>
       <Field label="Responsible person"><input className={input} value={value.personResponsibleName} onChange={(e) => update("personResponsibleName", e.target.value)} /></Field>
-      <div className="md:col-span-2"><Field label="Short description"><textarea required className={textarea} value={value.description} onChange={(e) => update("description", e.target.value)} /></Field></div>
-      <div className="md:col-span-2"><Field label="More details"><textarea className={`${textarea} min-h-52`} value={value.details} onChange={(e) => update("details", e.target.value)} /></Field></div>
-      <Field label="Source title"><input required className={input} value={value.sourceTitle} onChange={(e) => update("sourceTitle", e.target.value)} /></Field>
-      <Field label="Source URL"><input required className={input} value={value.sourceUrl} onChange={(e) => update("sourceUrl", e.target.value)} /></Field>
+      <div className="md:col-span-2"><Field label="Short description"><textarea className={textarea} value={value.description} onChange={(e) => update("description", e.target.value)} placeholder="Optional quick summary" /></Field></div>
+      <div className="md:col-span-2"><Field label="More details"><textarea className={`${textarea} min-h-52`} value={value.details} onChange={(e) => update("details", e.target.value)} placeholder="Add whatever you know; admins can complete missing fields later." /></Field></div>
+      <Field label="Source title"><input className={input} value={value.sourceTitle} onChange={(e) => update("sourceTitle", e.target.value)} placeholder="Optional" /></Field>
+      <Field label="Source URL"><input className={input} value={value.sourceUrl} onChange={(e) => update("sourceUrl", e.target.value)} placeholder="Optional link" /></Field>
       <button className="md:col-span-2 bg-ink text-primary-foreground px-4 py-3 font-mono text-xs uppercase" disabled={pending}>{pending ? "Sending..." : "Send for review"}</button>
     </form>
   );

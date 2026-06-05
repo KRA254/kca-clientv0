@@ -335,13 +335,13 @@ export const api = {
   } = {}) => request<Article[]>(`/corruption-cases${qs(params)}`),
   submitCorruptionCase: (body: {
     title: string;
-    excerpt: string;
-    content: string;
-    featuredImage: string;
+    excerpt?: string;
+    content?: string;
+    featuredImage?: string;
     category: string;
     year?: number;
     pseudonym?: string;
-    sources: { type: string; title: string; url: string; description?: string }[];
+    sources?: { type: string; title?: string; url?: string; description?: string }[];
     tags?: string[];
     images?: string[];
   }) => request<PublicSubmissionResponse>("/corruption-cases", { method: "POST", body: JSON.stringify(body) }),
@@ -383,7 +383,7 @@ export const api = {
   submitProject: (body: {
     name: string;
     imageUrl?: string;
-    description: string;
+    description?: string;
     details?: string;
     county?: string;
     sector: string;
@@ -400,7 +400,7 @@ export const api = {
     fundingSource?: string;
     completionPercent?: number;
     pseudonym?: string;
-    sources: { type: string; title: string; url: string; description?: string }[];
+    sources?: { type: string; title?: string; url?: string; description?: string }[];
   }) => request<PublicSubmissionResponse>("/projects", { method: "POST", body: JSON.stringify(body) }),
   uploadImage: async (file: File) => {
     const body = new FormData();
