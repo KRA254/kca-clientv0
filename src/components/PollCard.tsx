@@ -4,39 +4,46 @@ import { api, type Poll } from "@/lib/api";
 import { Info } from "lucide-react";
 import { EmptyState, SkeletonList } from "./SkeletonList";
 
-export function PollCard({ compact = false }: { compact?: boolean }) {
+export const POLL_QUERY_KEY = ["poll", "current", "live"] as const;
+
+export function PollCard({
+  compact = false,
+  poll: suppliedPoll,
+  isLoading: suppliedLoading = false,
+}: {
+  compact?: boolean;
+  poll?: Poll;
+  isLoading?: boolean;
+}) {
   const qc = useQueryClient();
   const { data, isLoading } = useQuery({
-    queryKey: ["poll", "current"],
+    queryKey: POLL_QUERY_KEY,
     queryFn: api.currentPoll,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
+    enabled: !suppliedPoll,
   });
   const [voted, setVoted] = useState<string | null>(null);
-  const poll: Poll | undefined = data ?? undefined;
+  const poll: Poll | undefined = suppliedPoll ?? data ?? undefined;
 
   const mutation = useMutation({
     mutationFn: (optionId: string) => api.vote(poll!.id, optionId),
     onMutate: (optionId) => {
       setVoted(optionId);
-      qc.setQueryData(["poll", "current"], (old: Poll | undefined) => {
-        if (!old) return old;
-        return {
-          ...old,
-          totalVotes: (old.totalVotes ?? 0) + 1,
-          options: old.options.map((o) =>
-            o.id === optionId ? { ...o, votes: (o.votes ?? 0) + 1 } : o
-          ),
-        };
-      });
     },
     onSuccess: (freshPoll) => {
-      qc.setQueryData(["poll", "current"], freshPoll);
+      qc.setQueryData(POLL_QUERY_KEY, withFreshPollTotals(freshPoll));
+      void qc.invalidateQueries({ queryKey: POLL_QUERY_KEY });
+      void qc.refetchQueries({ queryKey: POLL_QUERY_KEY, type: "active" });
     },
   });
 
-  if (isLoading) return <SkeletonList count={1} />;
+  if (isLoading || suppliedLoading) return <SkeletonList count={1} />;
   if (!poll) return <EmptyState title="No active poll" />;
   const showResults = !!voted;
-  const total = poll.options.reduce((s, o) => s + (o.votes ?? 0), 0) || 1;
+  const actualTotal = getPollTotal(poll);
+  const total = actualTotal || 1;
 
   return (
     <div className="border-2 border-ink bg-card p-5">
@@ -95,9 +102,26 @@ export function PollCard({ compact = false }: { compact?: boolean }) {
       </div>
       {showResults && (
         <div className="kicker mt-4">
-          {poll.totalVotes?.toLocaleString()} votes - ends {poll.endsAt ? new Date(poll.endsAt).toLocaleDateString() : "soon"}
+          {actualTotal.toLocaleString()} votes - ends {poll.endsAt ? new Date(poll.endsAt).toLocaleDateString() : "soon"}
         </div>
       )}
     </div>
   );
+}
+
+function getPollTotal(poll: Poll) {
+  return poll.options.reduce((sum, option) => sum + (option.votes ?? 0), 0);
+}
+
+function withFreshPollTotals(poll: Poll): Poll {
+  const totalVotes = getPollTotal(poll);
+  const rankings = [...poll.options]
+    .sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0))
+    .map((option, index) => ({
+      ...option,
+      rank: index + 1,
+      percent: totalVotes ? Math.round(((option.votes ?? 0) / totalVotes) * 100) : 0,
+    }));
+
+  return { ...poll, totalVotes, rankings };
 }
