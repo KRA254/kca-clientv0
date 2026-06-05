@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { PollCard } from "@/components/PollCard";
+import { PollCard, POLL_QUERY_KEY } from "@/components/PollCard";
 import { SectionHeader } from "@/components/SectionHeader";
 import { EmptyState, SkeletonList } from "@/components/SkeletonList";
 import { api, type Poll } from "@/lib/api";
@@ -20,15 +20,18 @@ export const Route = createFileRoute("/polls")({
 
 function Polls() {
   const { data: poll, isLoading } = useQuery({
-    queryKey: ["poll", "current"],
+    queryKey: POLL_QUERY_KEY,
     queryFn: api.currentPoll,
+    staleTime: 0,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true,
   });
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <SectionHeader kicker="Reader Voice" title="Live polls" />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-        <PollCard compact />
+        <PollCard compact poll={poll ?? undefined} isLoading={isLoading} />
         <PollProgressCard poll={poll ?? undefined} isLoading={isLoading} />
       </div>
       <div className="mt-8 border hairline bg-card p-5">
@@ -43,15 +46,14 @@ function PollProgressCard({ poll, isLoading }: { poll?: Poll; isLoading: boolean
   if (isLoading) return <SkeletonList count={1} />;
   if (!poll) return <EmptyState title="No poll rankings yet" />;
 
-  const ranked = poll.rankings?.length
-    ? poll.rankings
-    : [...poll.options]
-        .sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0))
-        .map((option, index) => ({
-          ...option,
-          rank: index + 1,
-          percent: poll.totalVotes ? Math.round(((option.votes ?? 0) / poll.totalVotes) * 100) : 0,
-        }));
+  const totalVotes = poll.options.reduce((sum, option) => sum + (option.votes ?? 0), 0);
+  const ranked = [...poll.options]
+    .sort((a, b) => (b.votes ?? 0) - (a.votes ?? 0))
+    .map((option, index) => ({
+      ...option,
+      rank: index + 1,
+      percent: totalVotes ? Math.round(((option.votes ?? 0) / totalVotes) * 100) : 0,
+    }));
 
   return (
     <section className="border-2 border-ink bg-card p-5">
@@ -60,7 +62,7 @@ function PollProgressCard({ poll, isLoading }: { poll?: Poll; isLoading: boolean
           <div className="kicker text-alert">Progress</div>
           <h2 className="font-display text-2xl font-semibold">Current ranking</h2>
         </div>
-        <div className="font-mono text-sm">{(poll.totalVotes ?? 0).toLocaleString()} votes</div>
+        <div className="font-mono text-sm">{totalVotes.toLocaleString()} votes</div>
       </div>
 
       <div className="space-y-3">
