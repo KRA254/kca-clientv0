@@ -8,3 +8,17 @@ export function registerServiceWorker() {
     });
   });
 }
+
+export function unregisterServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((registration) => {
+        void registration.unregister();
+      });
+    }).catch(() => {
+      // The app remains fully usable if the browser blocks service worker access.
+    });
+  });
+}
