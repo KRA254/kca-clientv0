@@ -236,8 +236,19 @@ export type Comment = {
 export type Poll = {
   id: string;
   question: string;
-  options: { id: string; label: string; votes?: number }[];
+  kind?: "profiles" | "custom";
+  status?: "open" | "closed" | "processing";
+  options: {
+    id: string;
+    label: string;
+    description?: string;
+    personId?: string;
+    imageUrl?: string;
+    votes?: number;
+  }[];
   totalVotes?: number;
+  rankings?: Array<Poll["options"][number] & { rank: number; percent: number }>;
+  weekStart?: string;
   endsAt?: string;
 };
 

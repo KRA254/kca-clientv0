@@ -24,6 +24,10 @@ const FOOTER = {
   tipLine: "Secure submissions via encrypted channels. Anonymous tips welcomed.",
 };
 
+const SOCIAL = {
+  x: "https://x.com/KC_Archives",
+};
+
 const headerAction =
   "inline-flex h-9 items-center justify-center gap-2 px-3 font-mono text-xs uppercase leading-none transition-colors";
 
@@ -192,6 +196,15 @@ export function SiteFooter() {
             <img src={BRAND.logo} alt="" className="h-12 w-12 object-contain bg-white/5" width={48} height={48} />
             <div className="kicker text-amber">Installable archive app</div>
           </div>
+          <a
+            href={SOCIAL.x}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-4 inline-flex items-center gap-2 border border-white/30 px-3 py-2 font-mono text-xs uppercase hover:bg-white hover:text-ink transition-colors"
+          >
+            <span className="grid h-4 w-4 place-items-center border border-current text-[0.65rem] leading-none">X</span>
+            Follow on X
+          </a>
         </div>
         {FOOTER.sections.slice(0, 1).map((section) => (
           <div key={section.title}>
