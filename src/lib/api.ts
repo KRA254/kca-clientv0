@@ -13,9 +13,14 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, init?: RequestInit, retries = 2): Promise<T> {
+  const headers = new Headers(init?.headers);
+  if (init?.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
   const res = await fetch(`${API_BASE}${path}`, {
     ...init,
-    headers: { "Content-Type": "application/json", ...(init?.headers || {}) },
+    headers,
   });
 
   if (res.status === 429 && retries > 0) {
@@ -422,7 +427,10 @@ export const api = {
     offset?: number;
   } = {}) => request<StalledProject[]>(`/projects/stalled${qs(params)}`),
   stalledProject: (slug: string) => request<StalledProject>(`/projects/stalled/${slug}`),
-  currentPoll: () => request<Poll>("/polls/current"),
+  currentPoll: () =>
+    request<Poll>(`/polls/current?ts=${Date.now()}`, {
+      cache: "no-store",
+    }),
   vote: (pollId: string, optionId: string) =>
     request<Poll>(`/polls/${pollId}/votes`, { method: "POST", body: JSON.stringify({ optionId }) }),
   ticker: () => request<TickerItem[]>("/ticker"),
